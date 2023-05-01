@@ -1,10 +1,5 @@
 import express from "express";
 const router = express.Router();
-const User = require("../models/userModel");
-const Doctor = require("../models/doctorModel");
-const Appointment = require("../models/appointmentModel");
-const bcrypt = require("bcrypt");
-import { NextFunction, RequestHandler, Response, Request } from "express";
 import {
   applyDoctorAccount,
   bookAppointment,
@@ -17,9 +12,7 @@ import {
   markAllNotificationsAsSeen,
   register,
 } from "../controller/userController";
-const jwt = require("jsonwebtoken");
-const authMiddleware = require("../middleware/authMid");
-const moment = require("moment");
+import authMiddleware from "../middleware/authMid";
 
 router.post("/register", register);
 

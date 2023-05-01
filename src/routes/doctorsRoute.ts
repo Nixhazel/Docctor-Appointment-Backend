@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import { changeAppointmentStatus, getAppointmentByDoctorId, getDoctorInfoById, getDoctorInfoByUserId, updateDoctorProfile } from "../controller/doctorController";
-const authMiddleware = require("../middleware/authMid");
+import authMiddleware from "../middleware/authMid";
 
 
 router.post("/get-doctor-info-by-user-id", authMiddleware, getDoctorInfoByUserId);

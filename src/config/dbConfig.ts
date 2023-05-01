@@ -1,17 +1,33 @@
-const mongoose = require("mongoose")
-import createError, {HttpError} from 'http-errors';
+// import mongoose from "mongoose"
+// import createError, { HttpError } from 'http-errors';
+// mongoose.set("strictQuery", true);
+// import { strict as assert } from "assert";
+// import { load } from "ts-dotenv";
 
-mongoose.connect(process.env.MONGO_URL)
 
-const connection = mongoose.connection;
+// const env = load({
+// 	MONGO_URL: String,
+// 	JWT_SECRET: String,
+// });
 
-connection.on("connected", () => {
-    console.log("Connected to MongoDB")
-})
+// const url = process.env.MONGO_URL as string;
 
-connection.on("error", (error: HttpError) => {
-    console.log("Error connecting to MongoDB", error)
-})
+// assert.ok(env.MONGO_URL === process.env.MONGO_URL);
 
-module.exports = mongoose;
+
+
+// mongoose.connect(process.env.MONGO_URL);
+
+// const connection = mongoose.connection;
+
+// connection.on("connected", () => {
+//     console.log("Connected to MongoDB")
+// })
+
+// connection.on("error", (error: HttpError) => {
+//     console.log("Error connecting to MongoDB", error)
+// })
+
+
+// export default mongoose
 

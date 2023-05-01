@@ -5,9 +5,39 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import cors from 'cors'
 require('dotenv').config()
-const dbConfig = require("./config/dbConfig")
+// import dbConfig from"./config/dbConfig"
+import * as dotenv from "dotenv";
+dotenv.config();
+import { strict as assert } from "assert";
+import { load } from "ts-dotenv";
+import mongoose from "mongoose";
+mongoose.set("strictQuery", true);
 
-console.log(process.env.MONGO_URL);
+
+
+const env = load({
+	MONGO_URL: String,
+	JWT_SECRET: String,
+});
+
+const url = process.env.MONGO_URL as string;
+
+assert.ok(env.MONGO_URL === process.env.MONGO_URL);
+assert.ok(env.JWT_SECRET === process.env.JWT_SECRET);
+
+mongoose.connect(process.env.MONGO_URL);
+
+const connection = mongoose.connection;
+
+connection.on("connected", () => {
+	console.log("Connected to MongoDB");
+});
+
+connection.on("error", (error: HttpError) => {
+	console.log("Error connecting to MongoDB", error);
+});
+
+
 
 import indexRouter from './routes/adminRoute';
 import usersRouter from './routes/users';

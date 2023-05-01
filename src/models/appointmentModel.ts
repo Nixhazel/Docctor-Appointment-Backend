@@ -1,4 +1,4 @@
-const mongoose2 = require("mongoose");
+import mongoose2 from "mongoose";
 
 const appointmentSchema = new mongoose2.Schema({
   userId: {
@@ -36,4 +36,5 @@ const appointmentSchema = new mongoose2.Schema({
 });
 
 const appointmentModel = mongoose2.model("appointments", appointmentSchema);
-module.exports = appointmentModel;
+
+export default appointmentModel;

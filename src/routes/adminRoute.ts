@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-const authMiddleware = require("../middleware/authMid");
+import authMiddleware from "../middleware/authMid";
 import {
   changeDoctorAccountStatus,
   getAllDoctors,

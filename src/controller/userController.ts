@@ -1,13 +1,14 @@
 import express from "express";
-const router = express.Router();
-const User = require("../models/userModel");
-const Doctor = require("../models/doctorModel");
-const Appointment = require("../models/appointmentModel");
-const bcrypt = require("bcrypt");
-import { NextFunction, RequestHandler, Response, Request } from "express";
-const jwt = require("jsonwebtoken");
-const authMiddleware = require("../middleware/authMid");
-const moment = require("moment");
+import User from "../models/userModel";
+import Doctor from "../models/doctorModel";
+import Appointment from "../models/appointmentModel";
+import bcrypt from "bcrypt";
+import { Response, Request } from "express";
+import jwt from "jsonwebtoken";
+// import authMiddleware from "../middleware/authMid";
+import moment from "moment";
+
+const secret: string = process.env.JWT_SECRET as string;
 
 export const register = async (req: Request, res: Response) => {
   //route : http://localhost:3000/users/register
@@ -59,9 +60,9 @@ export const login = async (req: Request, res: Response) => {
         .send({ message: "Password is incorrect", success: false });
       // checking if the password is correct
     } else {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "1d",
-      });
+      const token = jwt.sign({ id: user._id }, secret, {
+				expiresIn: "1d",
+			});
 
       res
         .status(200)
@@ -78,7 +79,7 @@ export const login = async (req: Request, res: Response) => {
 
 export const getUserInfoById = async (req: Request, res: Response) => {
   try {
-    const user = await User.findOne({ _id: req.body.userId });
+    const user:any = await User.findOne({ _id: req.body.userId });
     user.password = undefined;
     if (!user) {
       return res
@@ -105,18 +106,18 @@ export const applyDoctorAccount = async (req: Request, res: Response) => {
     const newDoctor = new Doctor({ ...req.body, status: "pending" });
     await newDoctor.save();
     const adminUser = await User.findOne({ isAdmin: true });
-    // console.log("doctor", newDoctor);
-    const unseenNotifications = adminUser.unseenNotifications;
+  
+    const unseenNotifications:any = adminUser?.unseenNotifications;
     unseenNotifications.push({
       type: "new-doctor-request",
       message: `${newDoctor.firstName} ${newDoctor.lastName} has applied for a doctor account`,
       data: {
         doctorId: newDoctor._id,
-        name: newDoctor.firstname + " " + newDoctor.lastname,
+        name: newDoctor.firstName + " " + newDoctor.lastName,
       },
       onclick: "/admin/doctorslist",
     });
-    await User.findByIdAndUpdate(adminUser._id, { unseenNotifications });
+    await User.findByIdAndUpdate(adminUser?._id, { unseenNotifications });
     res.status(200).send({
       success: true,
       message: "Doctor account applied successfully",
@@ -136,7 +137,7 @@ export const markAllNotificationsAsSeen = async (
   res: Response
 ) => {
   try {
-    const user = await User.findOne({ _id: req.body.userId });
+    const user:any = await User.findOne({ _id: req.body.userId });
     const unseenNotifications = user.unseenNotifications;
     const seenNotifications = user.seenNotifications;
     seenNotifications.push(...unseenNotifications);
@@ -161,7 +162,7 @@ export const markAllNotificationsAsSeen = async (
 
 export const deleteAllNotifications = async (req: Request, res: Response) => {
   try {
-    const user = await User.findOne({ _id: req.body.userId });
+    const user:any = await User.findOne({ _id: req.body.userId });
     user.seenNotifications = [];
     user.unseenNotifications = [];
     const updatedUser = await user.save();
@@ -207,7 +208,7 @@ export const bookAppointment = async (req: Request, res: Response) => {
     const newAppointment = new Appointment(req.body);
     await newAppointment.save();
     // pushing notification to doctor based on his userid
-    const user = await User.findOne({ _id: req.body.doctorInfo.userId });
+    const user:any = await User.findOne({ _id: req.body.doctorInfo.userId });
     user.unseenNotifications.push({
       type: "new-appointment-request",
       message: `${req.body.userInfo.name} has booked an appointment with you`,
